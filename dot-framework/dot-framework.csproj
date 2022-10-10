@@ -41,6 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Context\Controller\Controller.cs" />
+    <Compile Include="Context\Controller\ControllerPool.cs" />
+    <Compile Include="Context\Entity\EntityPool.cs" />
+    <Compile Include="IReusable.cs" />
     <Compile Include="Notification\Exceptions\NotifyEndlessLoopException.cs" />
     <Compile Include="Notification\Exceptions\ObserverAlreadyAddedException.cs" />
     <Compile Include="Notification\INotificationCenter.cs" />
@@ -48,7 +52,6 @@
     <Compile Include="Command\ICommandCenter.cs" />
     <Compile Include="Command\MacroCommand.cs" />
     <Compile Include="Command\SimpleCommand.cs" />
-    <Compile Include="Context\Controller\ViewController.cs" />
     <Compile Include="Context\Entity\Entity.cs" />
     <Compile Include="Context\Entity\EntityEqualityComparer.cs" />
     <Compile Include="Context\Entity\Exceptions\EntityAlreadyHasControllerException.cs" />
@@ -63,8 +66,8 @@
     <Compile Include="Context\Group\IGroup.cs" />
     <Compile Include="Context\IEntityCenter.cs" />
     <Compile Include="Context\Matcher\IMatcher.cs" />
-    <Compile Include="Facade.cs" />
-    <Compile Include="IFacade.cs" />
+    <Compile Include="Facade\Facade.cs" />
+    <Compile Include="Facade\IFacade.cs" />
     <Compile Include="Model\IModelCenter.cs" />
     <Compile Include="Model\ModelCenter.cs" />
     <Compile Include="Notification\INotifier.cs" />
@@ -73,6 +76,8 @@
     <Compile Include="Context\Entity\UnsafeAERC.cs" />
     <Compile Include="FWException.cs" />
     <Compile Include="Notification\Notifier.cs" />
+    <Compile Include="Pool\ObjectPool.cs" />
+    <Compile Include="Pool\ObjectSetPool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Context\View\IView.cs" />

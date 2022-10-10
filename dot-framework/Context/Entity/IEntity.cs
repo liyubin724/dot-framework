@@ -1,19 +1,19 @@
 ﻿namespace Dot.Framework
 {
-    public interface IEntity : IAERC
+    public delegate void EntityControllerChanged(IEntity entity, string name,IController controller);
+
+    public delegate void EntityEvent(IEntity entity);
+
+    public interface IEntity : IAERC, IReusable
     {
+        event EntityControllerChanged OnControllerAdded;
+        event EntityControllerChanged OnControllerRemoved;
+
         int Id { get; }
         bool IsEnable { get; }
-        IEntity[] Childs { get; }
 
-        void Initilized();
+        void Initialize();
         void Destroy();
-
-        void Attach(IEntity child);
-        void Detach(IEntity child);
-
-        void AttachToParent(IEntity parent);
-        void DetachFromParent();
 
         string[] ControllerNames { get; }
         int ControllerCount { get; }
@@ -24,7 +24,7 @@
 
         IController GetController(string name);
         IController[] GetControllers(string[] names);
-        IController GetAnyController(string name);
+        IController GetAnyController(string[] names);
         IController[] GetAllControllers();
 
         void AddController(string name, IController controller);

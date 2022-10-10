@@ -1,6 +1,6 @@
 ﻿namespace Dot.Framework
 {
-    public interface IController : INotifier, IObserver
+    public interface IController : INotifier, IObserver, IReusable
     {
         void Activated();
         void Deactivated();
