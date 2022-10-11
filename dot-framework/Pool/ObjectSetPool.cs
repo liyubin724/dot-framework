@@ -7,6 +7,11 @@ namespace Dot.Framework
     {
         private Dictionary<Type, ObjectPool<T>> m_PoolDic = new Dictionary<Type, ObjectPool<T>>();
 
+        public bool HasPool<I>() where I:T
+        {
+            return m_PoolDic.ContainsKey(typeof(I));
+        }
+
         public virtual ObjectPool<T> CreatePool<I>(Func<I> creator, Action<I> resetor) where I : T
         {
             Type type = typeof(I);
