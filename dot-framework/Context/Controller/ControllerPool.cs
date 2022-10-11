@@ -1,36 +1,53 @@
-﻿namespace Dot.Framework
+﻿using System;
+
+namespace Dot.Framework
 {
-    internal class ControllerPool : ObjectPoolSet<IController>
+    internal class ControllerPool : ObjectPoolSet
     {
-        public ObjectPool<IController> CreatePool<I>() where I : IController, new()
+        public ObjectPool CreatePool<T>() where T : IController, new()
         {
-            return CreatePool(
-                    () =>
-                    {
-                        return new I();
-                    },
-                    (controller) =>
-                    {
-                        controller.Reset();
-                    }
-                );
+            return CreatePool(typeof(T));
         }
 
-        public I GetController<I>(bool createIfNot = true) where I:IController, new()
+        private ObjectPool CreatePool(Type type)
         {
-            if(!HasPool<I>() && createIfNot)
+            var pool = GetPool(type);
+            if (pool != null)
             {
-                CreatePool<I>();
+                return pool;
             }
 
-            return Get<I>();
+            pool = CreatePool(
+                    type,
+                    () =>
+                    {
+                        return Activator.CreateInstance(type);
+                    },
+                    (item) =>
+                    {
+                        ((IController)item).Reset();
+                    }
+                );
+            return pool;
         }
 
-        public void ReleaseController<I>(I item,bool createIfNot = false) where I:IController,new()
+        public T GetController<T>(bool createIfNot = true) where T : IController, new()
         {
-            if (!HasPool<I>() && createIfNot)
+            var type = typeof(T);
+            if (!HasPool(type) && createIfNot)
             {
-                CreatePool<I>();
+                CreatePool<T>();
+            }
+
+            return (T)Get(type);
+        }
+
+        public void ReleaseController(IController item, bool createIfNot = false)
+        {
+            var type = item.GetType();
+            if (!HasPool(type) && createIfNot)
+            {
+                CreatePool(type);
             }
 
             Release(item);
