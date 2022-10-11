@@ -1,18 +1,56 @@
-﻿namespace Dot.Framework
+﻿using System;
+
+namespace Dot.Framework
 {
-    internal class EntityPool : ObjectPoolSet<IEntity>
+    internal class EntityPool : ObjectPoolSet
     {
-        public ObjectPool<IEntity> CreatePool<I>() where I : IEntity, new()
+        public ObjectPool CreatePool<E>() where E : IEntity, new()
         {
-            return CreatePool(
+            return CreatePool(typeof(E));
+        }
+
+        private ObjectPool CreatePool(Type type)
+        {
+            var pool = GetPool(type);
+            if (pool != null)
+            {
+                return pool;
+            }
+
+            pool = CreatePool(
+                    type,
                     () =>
                     {
-                        return new I();
+                        return Activator.CreateInstance(type);
                     },
-                    (entity) =>
+                    (item) =>
                     {
-                        entity.Reset();
-                    });
+                        ((IEntity)item).Reset();
+                    }
+                );
+            return pool;
+        }
+
+        public E GetEntity<E>(bool createIfNot = true) where E : IEntity, new()
+        {
+            var type = typeof(E);
+            if (!HasPool(type) && createIfNot)
+            {
+                CreatePool<E>();
+            }
+
+            return (E)Get(type);
+        }
+
+        public void ReleaseController(IController item, bool createIfNot = false)
+        {
+            var type = item.GetType();
+            if (!HasPool(type) && createIfNot)
+            {
+                CreatePool(type);
+            }
+
+            Release(item);
         }
     }
 }

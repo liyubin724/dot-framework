@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Dot.Framework
 {
-    public class  EntityIsNotEnabledException
+    public class EntityIsNotEnabledException : Exception
     {
+        
     }
 }

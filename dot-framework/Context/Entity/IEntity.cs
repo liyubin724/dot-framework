@@ -1,6 +1,8 @@
-﻿namespace Dot.Framework
+﻿using System;
+
+namespace Dot.Framework
 {
-    public delegate void EntityControllerChanged(IEntity entity, string name,IController controller);
+    public delegate void EntityControllerChanged(IEntity entity, string name);
 
     public delegate void EntityEvent(IEntity entity);
 
@@ -27,12 +29,13 @@
         IController GetAnyController(string[] names);
         IController[] GetAllControllers();
 
-        void AddController(string name, IController controller);
-        void AddControllers(string[] names, IController controllers);
+        void AddController<C>(string name,bool isSilent = false) where C : IController, new();
+        void AddController(string name, Type controllerType,bool isSilent = false);
+        void AddControllers(string[] names, Type[] controllerTypes, bool isSilent = false);
 
-        void RemoveController(string name);
-        void RemoveControllers(string[] names);
-        void RemoveAllController();
+        void RemoveController(string name, bool isSilent = false);
+        void RemoveControllers(string[] names,bool isSilent = false);
+        void RemoveAllController(bool isSilent = false);
 
     }
 }
