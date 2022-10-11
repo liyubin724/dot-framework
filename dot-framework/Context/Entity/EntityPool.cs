@@ -1,6 +1,6 @@
 ﻿namespace Dot.Framework
 {
-    internal class EntityPool : ObjectSetPool<IEntity>
+    internal class EntityPool : ObjectPoolSet<IEntity>
     {
         public ObjectPool<IEntity> CreatePool<I>() where I : IEntity, new()
         {

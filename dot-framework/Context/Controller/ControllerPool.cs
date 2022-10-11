@@ -1,6 +1,6 @@
 ﻿namespace Dot.Framework
 {
-    internal class ControllerPool : ObjectSetPool<IController>
+    internal class ControllerPool : ObjectPoolSet<IController>
     {
         public ObjectPool<IController> CreatePool<I>() where I : IController, new()
         {
@@ -26,7 +26,7 @@
             return Get<I>();
         }
 
-        public void ReleaseController<I>(I item,bool createIfNot = true) where I:IController,new()
+        public void ReleaseController<I>(I item,bool createIfNot = false) where I:IController,new()
         {
             if (!HasPool<I>() && createIfNot)
             {

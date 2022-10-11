@@ -10,14 +10,14 @@ namespace Dot.Framework
 
         private Stack<object> objectStack = null;
 
-        public ObjectPool(Func<object> create, Action<object> release)
+        public ObjectPool(Func<object> createFunc, Action<object> resetAction)
         {
             objectStack = new Stack<object>();
-            createFunc = create;
-            resetAction = release;
+            this.createFunc = createFunc;
+            this.resetAction = resetAction;
         }
 
-        public object Pop()
+        public object Get()
         {
             object target = null;
 
@@ -32,7 +32,7 @@ namespace Dot.Framework
             return target;
         }
 
-        public void Push(object obj)
+        public void Release(object obj)
         {
             if(objectStack.Contains(obj))
             {
@@ -60,14 +60,14 @@ namespace Dot.Framework
 
         private Stack<T> objectStack = null;
 
-        public ObjectPool(Func<T> creater, Action<T> reseter)
+        public ObjectPool(Func<T> createFunc, Action<T> resetAction)
         {
             objectStack = new Stack<T>();
-            createFunc = creater;
-            resetAction = reseter;
+            this.createFunc = createFunc;
+            this.resetAction = resetAction;
         }
 
-        public T Pop()
+        public T Get()
         {
             if (objectStack.Count == 0)
             {
@@ -79,7 +79,7 @@ namespace Dot.Framework
             }
         }
 
-        public void Push(T obj)
+        public void Release(T obj)
         {
             if(objectStack.Contains(obj))
             {
