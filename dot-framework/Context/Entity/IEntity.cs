@@ -6,7 +6,7 @@ namespace Dot.Framework
 
     public delegate void EntityEvent(IEntity entity);
 
-    public interface IEntity : IAERC, IReusable
+    public interface IEntity : IAERC
     {
         event EntityControllerChanged OnControllerAdded;
         event EntityControllerChanged OnControllerRemoved;

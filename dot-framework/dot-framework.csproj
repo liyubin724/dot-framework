@@ -48,7 +48,6 @@
     <Compile Include="Context\Matcher\NotMatcher.cs" />
     <Compile Include="Context\Matcher\OrMatcher.cs" />
     <Compile Include="Context\Matcher\XORMatcher.cs" />
-    <Compile Include="IReusable.cs" />
     <Compile Include="Notification\Exceptions\NotifyEndlessLoopException.cs" />
     <Compile Include="Notification\Exceptions\ObserverAlreadyAddedException.cs" />
     <Compile Include="Notification\INotificationCenter.cs" />

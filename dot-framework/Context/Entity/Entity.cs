@@ -127,7 +127,9 @@ namespace Dot.Framework
             {
                 throw new Exception();
             }
+
             m_ControllerDic.Add(name, controller);
+            controller.Activated(name, this);
 
             if (!isSilent)
             {
@@ -157,6 +159,7 @@ namespace Dot.Framework
                 throw new Exception();
             }
             m_ControllerDic.Add(name, controller);
+            controller.Activated(name, this);
 
             if (!isSilent)
             {
@@ -187,7 +190,7 @@ namespace Dot.Framework
             if (m_ControllerDic.TryGetValue(name, out var controller))
             {
                 m_ControllerDic.Remove(name);
-
+                controller.Deactivated();
                 m_ControllerPool.ReleaseController(controller);
 
                 if (!isSilent)

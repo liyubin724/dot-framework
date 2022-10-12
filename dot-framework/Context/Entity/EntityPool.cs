@@ -9,7 +9,7 @@ namespace Dot.Framework
             return CreatePool(typeof(E));
         }
 
-        private ObjectPool CreatePool(Type type)
+        public ObjectPool CreatePool(Type type)
         {
             var pool = GetPool(type);
             if (pool != null)
@@ -17,17 +17,19 @@ namespace Dot.Framework
                 return pool;
             }
 
-            pool = CreatePool(
-                    type,
-                    () =>
-                    {
-                        return Activator.CreateInstance(type);
-                    },
-                    (item) =>
-                    {
-                        ((IEntity)item).Reset();
-                    }
-                );
+            Func<object> create = () =>
+            {
+                var entity = (IEntity)Activator.CreateInstance(type);
+                entity.Initialize();
+                return entity;
+            };
+
+            Action<object> reset = (entity) =>
+            {
+
+            };
+
+            pool = CreatePool(type, create, reset, null);
             return pool;
         }
 
