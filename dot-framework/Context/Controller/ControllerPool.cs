@@ -4,12 +4,7 @@ namespace Dot.Framework
 {
     internal class ControllerPool : ObjectPoolSet
     {
-        public ObjectPool CreatePool<T>() where T : IController, new()
-        {
-            return CreatePool(typeof(T));
-        }
-
-        private ObjectPool CreatePool(Type type)
+        public ObjectPool CreatePool(Type type)
         {
             var pool = GetPool(type);
             if (pool != null)
@@ -17,18 +12,26 @@ namespace Dot.Framework
                 return pool;
             }
 
-            pool = CreatePool(
-                    type,
-                    () =>
-                    {
-                        return Activator.CreateInstance(type);
-                    },
-                    (item) =>
-                    {
-                        ((IController)item).Reset();
-                    }
-                );
+            Func<object> create = () =>
+            {
+                var controller = (IController)Activator.CreateInstance(type);
+                controller.Initialize();
+                return controller;
+            };
+
+            Action<object> destroy = (controller) =>
+            {
+                ((IController)controller).Destroy();
+            };
+
+            pool = CreatePool(type, create, null, destroy);
+
             return pool;
+        }
+
+        public ObjectPool CreatePool<T>() where T : IController, new()
+        {
+            return CreatePool(typeof(T));
         }
 
         public T GetController<T>(bool createIfNot = true) where T : IController, new()
