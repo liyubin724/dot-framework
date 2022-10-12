@@ -14,7 +14,9 @@ namespace Dot.Framework
         int Id { get; }
         bool IsEnable { get; }
 
-        void Initialize();
+        void Initialize(ControllerPool controllerPool);
+        void GetFromPool(int id);
+        void ReleaseToPool();
         void Destroy();
 
         string[] ControllerNames { get; }

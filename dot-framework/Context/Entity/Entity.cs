@@ -6,13 +6,15 @@ namespace Dot.Framework
 {
     public class Entity : IEntity
     {
+        public static EntityEqualityComparer<Entity> Comparer = new EntityEqualityComparer<Entity>();
+
         public int Id
         {
             get; internal set;
         }
 
         private IAERC m_AERC;
-        public int RetainCount => m_AERC.RetainCount;
+        public int RefCount => m_AERC.RefCount;
 
         private bool m_IsEnable = false;
         public bool IsEnable => m_IsEnable;
@@ -222,18 +224,29 @@ namespace Dot.Framework
             }
         }
 
-        public void Initialize()
+        public void Initialize(ControllerPool controllerPool)
         {
+            m_ControllerPool = controllerPool;
         }
 
-        public void Retain(object owner)
+        public void GetFromPool(int id)
         {
-            m_AERC?.Retain(owner);
+            Id = id;
         }
 
-        public void Release(object owner)
+        public void ReleaseToPool()
         {
-            m_AERC?.Release(owner);
+            Id = 0;
+        }
+
+        public void RetainRef(object owner)
+        {
+            m_AERC?.RetainRef(owner);
+        }
+
+        public void ReleaseRef(object owner)
+        {
+            m_AERC?.ReleaseRef(owner);
         }
 
         public void Destroy()

@@ -43,11 +43,18 @@
   <ItemGroup>
     <Compile Include="Context\Controller\Controller.cs" />
     <Compile Include="Context\Controller\ControllerPool.cs" />
-    <Compile Include="Context\Entity\EntityPool.cs" />
-    <Compile Include="Context\Matcher\AndMatcher.cs" />
-    <Compile Include="Context\Matcher\NotMatcher.cs" />
-    <Compile Include="Context\Matcher\OrMatcher.cs" />
-    <Compile Include="Context\Matcher\XORMatcher.cs" />
+    <Compile Include="Context\EntityCenter.cs" />
+    <Compile Include="Context\Group\Group.cs" />
+    <Compile Include="Context\Collector\ICollector.cs" />
+    <Compile Include="Context\Matcher\Basic\AndMatcher.cs" />
+    <Compile Include="Context\Matcher\Basic\NotMatcher.cs" />
+    <Compile Include="Context\Matcher\Basic\OrMatcher.cs" />
+    <Compile Include="Context\Matcher\Basic\XORMatcher.cs" />
+    <Compile Include="Context\Matcher\HasAllControllerMatcher.cs" />
+    <Compile Include="Context\Matcher\HasAnyControllerMatcher.cs" />
+    <Compile Include="Context\Matcher\HasComponentMatcher.cs" />
+    <Compile Include="Context\Matcher\NotHasAnyComponentMatcher.cs" />
+    <Compile Include="Context\Matcher\NotHasComponentMatcher.cs" />
     <Compile Include="Notification\Exceptions\NotifyEndlessLoopException.cs" />
     <Compile Include="Notification\Exceptions\ObserverAlreadyAddedException.cs" />
     <Compile Include="Notification\INotificationCenter.cs" />
@@ -85,6 +92,7 @@
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Context\View\IView.cs" />
     <Compile Include="Command\CommandCenter.cs" />
+    <Compile Include="Utility\IdCreator.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

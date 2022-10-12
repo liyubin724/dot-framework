@@ -3,36 +3,13 @@ using System.Collections.Generic;
 
 namespace Dot.Framework
 {
-    internal class ObjectPool
+    public class ObjectPool
     {
         private Func<object> m_CreateItemFunc = null;
-        private Action<object> m_ResetItemAction = null;
-        private Action<object> m_DestroyItemAction = null;
 
-        public Action<object> ResetAction
-        {
-            get
-            {
-                return m_ResetItemAction;
-            }
-            set
-            {
-                m_ResetItemAction = value;
-            }
-        }
-
-        public Action<object> DestroyAction
-        {
-            get
-            {
-                return m_DestroyItemAction;
-            }
-            set
-            {
-                m_DestroyItemAction = value;
-            }
-        }
-
+        public Action<object> RetainAction { get; set; }
+        public Action<object> ReleaseAction { get; set; }
+        public Action<object> DestroyAction { get; set; }
 
         private Stack<object> m_ItemStack = null;
 
@@ -44,17 +21,20 @@ namespace Dot.Framework
 
         public object Get()
         {
-            object target = null;
+            object item = null;
 
             if (m_ItemStack.Count == 0)
             {
-                target = m_CreateItemFunc();
+                item = m_CreateItemFunc();
             }
             else
             {
-                target = m_ItemStack.Pop();
+                item = m_ItemStack.Pop();
             }
-            return target;
+
+            RetainAction?.Invoke(item);
+
+            return item;
         }
 
         public T Get<T>() where T : class
@@ -63,80 +43,27 @@ namespace Dot.Framework
             return (T)item;
         }
 
-        public void Release(object obj)
+        public void Release(object item)
         {
-            if (m_ItemStack.Contains(obj))
+            if (m_ItemStack.Contains(item))
             {
-                return;
+                throw new Exception("The item has been realsed.item = " + item);
             }
 
-            m_ResetItemAction?.Invoke(obj);
-            m_ItemStack.Push(obj);
+            ReleaseAction?.Invoke(item);
+            m_ItemStack.Push(item);
         }
 
         public void Clear()
         {
-            m_CreateItemFunc = null;
-            m_ResetItemAction = null;
-
-            if (m_DestroyItemAction != null)
+            if (DestroyAction != null)
             {
                 foreach (var item in m_ItemStack)
                 {
-                    m_DestroyItemAction(item);
+                    DestroyAction(item);
                 }
             }
-            m_DestroyItemAction = null;
-
             m_ItemStack.Clear();
-            m_ItemStack = null;
         }
     }
-
-    //internal class ObjectPool<T> where T : class
-    //{
-    //    private Func<T> createFunc = null;
-    //    private Action<T> resetAction = null;
-
-    //    private Stack<T> objectStack = null;
-
-    //    public ObjectPool(Func<T> createFunc, Action<T> resetAction)
-    //    {
-    //        objectStack = new Stack<T>();
-    //        this.createFunc = createFunc;
-    //        this.resetAction = resetAction;
-    //    }
-
-    //    public T Get()
-    //    {
-    //        if (objectStack.Count == 0)
-    //        {
-    //            return createFunc();
-    //        }
-    //        else
-    //        {
-    //            return objectStack.Pop();
-    //        }
-    //    }
-
-    //    public void Release(T obj)
-    //    {
-    //        if(objectStack.Contains(obj))
-    //        {
-    //            return;
-    //        }
-
-    //        resetAction?.Invoke(obj);
-    //        objectStack.Push(obj);
-    //    }
-
-    //    public void Clear()
-    //    {
-    //        createFunc = null;
-    //        resetAction = null;
-
-    //        objectStack.Clear();
-    //        objectStack = null;
-    //    }
-    //}
 }

@@ -5,7 +5,7 @@ namespace Dot.Framework
 {
     public sealed class SafeAERC : IAERC
     {
-        public int RetainCount => m_Owners.Count;
+        public int RefCount => m_Owners.Count;
 
         private IEntity m_Enity;
         private HashSet<object> m_Owners = new HashSet<object>();
@@ -14,7 +14,7 @@ namespace Dot.Framework
             m_Enity = entity;
         }
 
-        public void Release(object owner)
+        public void ReleaseRef(object owner)
         {
             if(!m_Owners.Add(owner))
             {
@@ -22,7 +22,7 @@ namespace Dot.Framework
             }
         }
 
-        public void Retain(object owner)
+        public void RetainRef(object owner)
         {
             if(!m_Owners.Remove(owner))
             {

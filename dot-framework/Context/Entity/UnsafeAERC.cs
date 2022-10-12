@@ -4,14 +4,14 @@
     {
         private int m_RetainedCount = 0;
 
-        public int RetainCount => m_RetainedCount;
+        public int RefCount => m_RetainedCount;
 
-        public void Release(object owner)
+        public void ReleaseRef(object owner)
         {
             m_RetainedCount++;
         }
 
-        public void Retain(object owner)
+        public void RetainRef(object owner)
         {
             m_RetainedCount--;
         }

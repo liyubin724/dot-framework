@@ -2,7 +2,7 @@
 
 namespace Dot.Framework
 {
-    internal class ControllerPool : ObjectPoolSet
+    public class ControllerPool : ObjectPoolSet
     {
         public ObjectPool CreatePool(Type type)
         {
@@ -15,7 +15,7 @@ namespace Dot.Framework
             Func<object> create = () =>
             {
                 var controller = (IController)Activator.CreateInstance(type);
-                controller.Initialize();
+                controller?.Initialize();
                 return controller;
             };
 
