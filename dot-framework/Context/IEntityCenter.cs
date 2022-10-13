@@ -16,6 +16,7 @@ namespace Dot.Framework
         IEntity CreateEntity(string[] controllerNames, Type[] controllerTypes);
         void DestroyEntity(int id);
 
+        IGroup FindGroup(string name);
         IGroup CreateGroup(string name, IMatcher matcher);
         void DestroyGroup(string name);
     }

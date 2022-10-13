@@ -92,7 +92,6 @@
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Context\View\IView.cs" />
     <Compile Include="Command\CommandCenter.cs" />
-    <Compile Include="Utility\IdCreator.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

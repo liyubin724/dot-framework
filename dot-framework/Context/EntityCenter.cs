@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dot.Framework
 {
@@ -12,6 +9,7 @@ namespace Dot.Framework
 
         private ControllerPool m_ControllerPool;
         private ObjectPool m_EntityPool;
+        private ObjectPool m_GroupPool;
 
         private Dictionary<int, IEntity> m_EntityDic = new Dictionary<int, IEntity>();
         private Dictionary<int, IEntity> m_SingleEntityDic = new Dictionary<int, IEntity>();
@@ -25,6 +23,12 @@ namespace Dot.Framework
                 var entity = new Entity();
                 entity.Initialize(m_ControllerPool);
                 return entity;
+            });
+
+            m_GroupPool = new ObjectPool(() =>
+            {
+                var group = new Group();
+                return group;
             });
         }
 
@@ -41,7 +45,7 @@ namespace Dot.Framework
             }
 
             entity = m_EntityPool.Get() as IEntity;
-            entity.GetFromPool(id);
+            entity.Activate(id);
 
             if(controllerNames!=null)
             {
@@ -59,7 +63,7 @@ namespace Dot.Framework
             {
                 m_SingleEntityDic.Remove(id);
 
-                entity.ReleaseToPool();
+                entity.Deactivate();
                 m_EntityPool.Release(entity);
             }
         }
@@ -74,7 +78,7 @@ namespace Dot.Framework
             m_EnityMaxId++;
 
             var entity = m_EntityPool.Get() as IEntity;
-            entity.GetFromPool(m_EnityMaxId);
+            entity.Activate(m_EnityMaxId);
 
             if(controllerNames != null)
             {
@@ -92,31 +96,42 @@ namespace Dot.Framework
                 m_EntityDic.Remove(id);
 
                 entity.RemoveAllController();
-                entity.ReleaseToPool();
+                entity.Deactivate();
                 m_EntityPool.Release(entity);
             }
         }
 
+        public IGroup FindGroup(string name)
+        {
+            return m_GroupDic[name];
+        }
+
         public IGroup CreateGroup(string name,IMatcher matcher)
         {
-            if(m_GroupDic.TryGetValue(name,out var group))
+            if(m_GroupDic.ContainsKey(name))
             {
-                if(group.Matcher == matcher)
-                {
-                    return group;
-                }
-                else
-                {
-                    throw new Exception();
-                }
+                throw new Exception();
             }
 
-            return null;
+            var group = (IGroup)m_GroupPool.Get();
+            group.Activate(name,matcher);
+
+            m_GroupDic.Add(name, group);
+
+            return group;
         }
 
         public void DestroyGroup(string name)
         {
+            if(!m_GroupDic.TryGetValue(name,out var group))
+            {
+                return;
+            }
+            
+            m_GroupDic.Remove(name);
 
+            group.Deactivate();
+            m_GroupPool.Release(group);
         }
     }
 }

@@ -131,7 +131,7 @@ namespace Dot.Framework
             }
 
             m_ControllerDic.Add(name, controller);
-            controller.Activated(name, this);
+            controller.Activate(name, this);
 
             if (!isSilent)
             {
@@ -161,7 +161,7 @@ namespace Dot.Framework
                 throw new Exception();
             }
             m_ControllerDic.Add(name, controller);
-            controller.Activated(name, this);
+            controller.Activate(name, this);
 
             if (!isSilent)
             {
@@ -192,7 +192,7 @@ namespace Dot.Framework
             if (m_ControllerDic.TryGetValue(name, out var controller))
             {
                 m_ControllerDic.Remove(name);
-                controller.Deactivated();
+                controller.Deactivate();
                 m_ControllerPool.ReleaseController(controller);
 
                 if (!isSilent)
@@ -229,12 +229,12 @@ namespace Dot.Framework
             m_ControllerPool = controllerPool;
         }
 
-        public void GetFromPool(int id)
+        public void Activate(int id)
         {
             Id = id;
         }
 
-        public void ReleaseToPool()
+        public void Deactivate()
         {
             Id = 0;
         }

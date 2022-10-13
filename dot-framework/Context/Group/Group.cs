@@ -5,8 +5,8 @@ namespace Dot.Framework
 {
     public class Group : IGroup
     {
-        private IMatcher m_Mathcer = null;
-        public IMatcher Matcher => m_Mathcer;
+        public string Name { get; private set; }
+        public IMatcher Matcher { get;private set; }
 
         private Dictionary<int, IEntity> m_EntityDic = new Dictionary<int, IEntity>();
         private IEntity[] m_CachedEntities = null;
@@ -28,11 +28,6 @@ namespace Dot.Framework
         public event GroupChanged OnEntityAdded;
         public event GroupChanged OnEntityRemoved;
 
-        public Group(IMatcher matcher)
-        {
-            m_Mathcer = matcher;
-        }
-
         public void ReleaseRef()
         {
             m_RefCount++;
@@ -43,13 +38,25 @@ namespace Dot.Framework
             m_RefCount--;
         }
 
+        public void Activate(string name,IMatcher matcher)
+        {
+            Name = name;
+            Matcher = matcher;
+        }
+
+        public void Deactivate()
+        {
+            Name = null;
+            Matcher = null;
+        }
+
         public bool TryUpdate(IEntity entity, string controllerName)
         {
-            if (m_Mathcer == null)
+            if (Matcher == null)
             {
                 return false;
             }
-            if (m_Mathcer.IsMatch(entity))
+            if (Matcher.IsMatch(entity))
             {
                 if (AddEntitySilent(entity))
                 {
@@ -74,6 +81,9 @@ namespace Dot.Framework
             if (!m_EntityDic.ContainsKey(entity.Id))
             {
                 m_EntityDic.Add(entity.Id, entity);
+
+                m_CachedEntities = null;
+
                 return true;
             }
             return false;
@@ -84,6 +94,9 @@ namespace Dot.Framework
             if (m_EntityDic.ContainsKey(entity.Id))
             {
                 m_EntityDic.Remove(entity.Id);
+
+                m_CachedEntities = null;
+
                 return true;
             }
             return false;

@@ -11,6 +11,7 @@
 
     public interface IGroup
     {
+        string Name { get; }
         IMatcher Matcher { get; }
         IEntity[] Entities { get; }
 
@@ -20,6 +21,9 @@
         int RefCount { get; }
         void RetainRef();
         void ReleaseRef();
+
+        void Activate(string name, IMatcher matcher);
+        void Deactivate();
 
         bool TryUpdate(IEntity entity, string controllerName);
     }

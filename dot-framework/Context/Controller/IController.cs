@@ -7,8 +7,8 @@
         IEntity Target { get;}
 
         void Initialize();
-        void Activated(string name,IEntity entity);
-        void Deactivated();
+        void Activate(string name, IEntity entity);
+        void Deactivate();
         void Destroy();
     }
 }

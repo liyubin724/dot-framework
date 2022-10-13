@@ -7,25 +7,57 @@
 
         public IEntity Target { get; private set; }
 
-        public virtual void Initialize()
+        public void Initialize()
+        {
+            OnInitialized();
+        }
+
+        protected virtual void OnInitialized()
         {
         }
 
-        public void Activated(string name, IEntity target)
+        public void Activate(string name, IEntity entity)
         {
-            Name = name;
+            if(IsEnable)
+            {
+                return;
+            }
             IsEnable = true;
-            Target = target;
+            OnActivated();
         }
 
-        public virtual void Deactivated()
+        protected virtual void OnActivated()
         {
+        }
+
+        public void Deactivate()
+        {
+            if(!IsEnable)
+            {
+                return;
+            }
+
+            OnDeactivated();
+
             Name = null;
             IsEnable = false;
             Target = null;
         }
 
-        public virtual void Destroy()
+        protected virtual void OnDeactivated()
+        {
+        }
+
+        public void Destroy()
+        {
+            OnDestroy();
+
+            Name = null;
+            IsEnable = false;
+            Target = null;
+        }
+
+        protected virtual void OnDestroy()
         {
         }
 
@@ -34,8 +66,19 @@
             return null;
         }
 
-        public virtual void HandleNotification(string name, object body, string flag)
+        public void HandleNotification(string name, object body, string flag)
         {
+            if (!IsEnable)
+            {
+                return;
+            }
+
+            OnHandleNotification(name, body, flag);
+        }
+
+        protected virtual void OnHandleNotification(string name, object body, string flag)
+        {
+
         }
     }
 }
